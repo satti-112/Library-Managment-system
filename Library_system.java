@@ -36,6 +36,13 @@ public class Library_system {
     static int historyCount = 0;
 
     public static void main(String[] args) {
+        System.out.println("\t\t╔════════════════════════════╗");
+        System.out.println("\t\t║        LIBRARY SYSTEM      ║");
+        System.out.println("\t\t╚════════════════════════════╝");
+        System.out.println("========================================================\n");
+        System.out.println("       Developed by: Muzammil Ghaffar ,Ahsan Raza");
+
+        System.out.println("========================================================\n\n");
         loadUsers();
         loadBooks();
         loadHistory();
