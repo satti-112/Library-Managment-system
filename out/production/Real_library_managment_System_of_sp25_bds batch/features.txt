@@ -1,0 +1,43 @@
+logical flow of library managmnent system.
+1
+admin 
+type usernmane and password
+2 student
+add a book 
+remove a book 
+add user
+all available books
+history of all books given or checked
+
+1
+type usernamne or password 2 or not registered ask admin to do it
+issue a book 
+return a book
+check all available book
+
+not returned books time factor late or on time
+books by catageory
+three files.data for users books ,history
+i will make a librarary managment system .
+admin sir khurram.
+own password 
+
+user sp25-bds-0 to 55
+password =---- up tu 8 characters 1 alphabet i character and number must .
+moreover
+
+fucnctions like admin can do 
+add a book 
+remove abook
+search a book
+add user
+remove a user
+history of issuing books or all catagories fo books like datascience books,pf books ,functional english books ,civic books
+function of users
+enter  your registeration number ,username , and password 
+display all books.
+issue a book
+return a book
+display available books
+
+
