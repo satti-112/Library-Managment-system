@@ -1,16 +1,17 @@
 import java.io.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;//for formatting date and converting in to strings
+import java.time.temporal.ChronoUnit;//for adding date
 import java.util.Scanner;
 
 public class Library_system {
-    // ──── 1. CONSTANTS AND “DATABASE” ARRAYS ───────────────────────────────
+    // 1. CONSTANTS AND “DATABASE” ARRAYS
     static final int MAX_USERS   = 100;
     static final int MAX_BOOKS   = 1000;
     static final int MAX_HISTORY = 5000;
 
     // users.dat fields
+    // Users all attributes
     static String[] regNos     = new String[MAX_USERS];
     static String[] usernames  = new String[MAX_USERS];
     static String[] passwords  = new String[MAX_USERS];
@@ -54,7 +55,7 @@ public class Library_system {
     static void mainMenu() {
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("\n=== Library Management System ===");
+            System.out.println("\n=== Welcome to SP25-BDS batch Library Management System ===");
             System.out.println("1) Admin Login");
             System.out.println("2) Student Login");
             System.out.println("3) Exit");
@@ -79,31 +80,37 @@ public class Library_system {
         }
     }
 
-    // ──── 3. STUDENT LOGIN & MENU ──────────────────────────────────────────────
+    // ──── 3. STUDENT LOGIN & MENU ──────
     static void studentLogin() {
         System.out.println("----------------------Student----------------------");
         Scanner sc = new Scanner(System.in);
-        System.out.print("\nEnter Registration No. or Username: ");
+        System.out.print("\nEnter Username: ");
         String identifier = sc.nextLine();
         System.out.print("Enter Password: ");
         String pass = sc.nextLine();
 
-        // 3.1 Find user index by username or regNo
+        //  Find user index by username or regNo
         int idx = findUserIndexByUsername(identifier);
         if (idx == -1) {
             idx = findUserIndexByRegNo(identifier);
         }
+        //Checking all the credentials matches
         if (idx == -1 || !passwords[idx].equals(pass) || !roles[idx].equals("student")) {
             System.out.println("Invalid login or not registered. Contact Admin.");
             return; // back to main menu
         }
 
-        // 3.2 Show the Student Menu, passing the student’s index in users[]
+        //Show the Student Menu, passing the student’s index in users[]
         showStudentMenu(idx);
     }
 
     static void showStudentMenu(int studentIdx) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("****Aleart Message***For Issuing or removing book follow our guide");
+        System.out.println("STEP 1: View all books of library for issuing or returning  books using Option 1");
+        System.out.println("STEP 2: Note the BOOK ID of your desired book");
+        System.out.println("STEP 3: Come back to this menu");
+        System.out.println("STEP 4: Select 'Issue a Book or return book ' again when ready");
         while (true) {
             System.out.println("\n--- Student Menu ---");
             System.out.println("1) Display All Books");
@@ -121,10 +128,10 @@ public class Library_system {
                     libraryAllBooks();
                     break;
                 case 2:
-                    studentIssueBook(studentIdx);
+                    studentIssueBook(studentIdx);//this method uses the student’s index in users[]
                     break;
                 case 3:
-                    studentReturnBook(studentIdx);
+                    studentReturnBook(studentIdx);//also this method uses the student’s index in users[]also
                     break;
                 case 4:
                     displayAllAvailableBooks();
@@ -140,7 +147,7 @@ public class Library_system {
         }
     }
 
-    // ──── 3.1 STUDENT: DISPLAY ALL BOOKS ───────────────────────────────────────
+    // ──── STUDENT: DISPLAY ALL BOOKS ─────
     static void libraryAllBooks() {
         System.out.println("\n--- All Books in Library ---");
         if (bookCount == 0) {
@@ -153,7 +160,7 @@ public class Library_system {
         }
     }
 
-    // ──── 3.2 STUDENT: SEARCH BOOK (same logic as adminSearchBook) ────────────
+    // ──── STUDENT: SEARCH BOOK (same logic as adminSearchBook) ────────────
     static void studentSearchBook() {
         Scanner sc = new Scanner(System.in);
         System.out.print("\nSearch by (1) Title, (2) Author, (3) Category: ");
@@ -190,7 +197,7 @@ public class Library_system {
         }
     }
 
-    // ──── 3.3 STUDENT: ISSUE A BOOK ────────────────────────────────────────────
+    // ────  STUDENT: ISSUE A BOOK ──────
     static void studentIssueBook(int studentIdx) {
         Scanner sc = new Scanner(System.in);
         System.out.print("\nEnter Book ID to issue: ");
@@ -205,12 +212,12 @@ public class Library_system {
             return;
         }
 
-        // 3.3.1 Mark book as issued
+        //  Mark book as issued
         statuses[bIdx] = "issued";
 
-        // 3.3.2 Compute issue date and due date (14 days later)
-        String issueDate = getCurrentDateTime();           // e.g. "2025-06-03 09:15"
-        String dueDate   = addDaysToDate(getCurrentDate(), 14); // e.g. "2025-06-17"
+        //  Compute issue date and due date (14 days later)
+        String issueDate = getCurrentDate();           // e.g. "2025-06-03 "
+        String dueDate   = addDaysToDate(getCurrentDate()); // e.g. "2025-06-17"
 
         // 3.3.3 Append to history[]
         histTimestamps[historyCount]  = issueDate;
@@ -222,10 +229,11 @@ public class Library_system {
         histFines[historyCount]       = "0";
         historyCount++;
 
-        System.out.println("Book issued. Due date: " + dueDate);
+        System.out.println("Book issued.Issued date "+issueDate+" Due date: " + dueDate);
+        System.out.println("Alert.Make sure to submit it on time .your fine will increase daily up tu 1O rupees after due date");
     }
 
-    // ──── 3.4 STUDENT: RETURN A BOOK ───────────────────────────────────────────
+    // ────  STUDENT: RETURN A BOOK ─────
     static void studentReturnBook(int studentIdx) {
         Scanner sc = new Scanner(System.in);
         System.out.print("\nEnter Book ID to return: ");
@@ -236,7 +244,7 @@ public class Library_system {
             return;
         }
 
-        // 3.4.1 Verify that studentIdx actually has an “issue” record for this book and it’s not returned yet
+        //  Verify that studentIdx actually has an “issue” record for this book, and it’s not returned yet
         boolean hasIssued = false;
         int histIdx = -1;
         for (int i = 0; i < historyCount; i++) {
@@ -254,17 +262,17 @@ public class Library_system {
             return;
         }
 
-        // 3.4.2 Update book status back to available
+        //  Update book status back to available
         statuses[bIdx] = "available";
 
-        // 3.4.3 Calculate fine (if returned late)
+        //  Calculate fine (if returned late)
         String today = getCurrentDate();             // "2025-06-17"
         String due   = histDueDates[histIdx];        // e.g. "2025-06-15"
         int fine = calculateFine(due, today);        // e.g. (days late × 10)
 
-        // 3.4.4 Log this return as a new history entry
+        //  Log this return as a new history entry
         histActions[historyCount]      = "return";
-        histTimestamps[historyCount]   = getCurrentDateTime();
+        histTimestamps[historyCount]   = getCurrentDate();
         histRegNos[historyCount]       = regNos[studentIdx];
         histBookIDs[historyCount]      = bid;
         histDueDates[historyCount]     = due;
@@ -283,32 +291,42 @@ public class Library_system {
         }
     }
 
-    // ──── 3.5 HELPER: CALCULATE FINE ───────────────────────────────────────────
+    // ────  HELPER for  method: CALCULATE FINE ─────
     static int calculateFine(String dueDate, String returnDate) {
-        LocalDate dDue    = LocalDate.parse(dueDate);
-        LocalDate dReturn = LocalDate.parse(returnDate);
-        long daysLate = ChronoUnit.DAYS.between(dDue, dReturn);
+        // Convert strings to LocalDate
+        LocalDate due = LocalDate.parse(dueDate);
+        LocalDate returned = LocalDate.parse(returnDate);
+
+        //built in method used to  Calculate how many days late
+        long daysLate = ChronoUnit.DAYS.between(due, returned);
+
+        int fine = 0;
+
+        // If returned late, loop over each day and add 10 PKR
         if (daysLate > 0) {
-            return (int) daysLate * 10;  // 10 PKR per day
+            for (int i = 1; i <= daysLate; i++) {
+                fine += 10;  // Add 10 PKR per late day
+            }
         }
-        return 0;
+
+        return fine;
     }
 
-    // ──── 3.6 HELPER: GET CURRENT DATE / TIME ─────────────────────────────────
+
+    // ────  HELPER for method: GET CURRENT DATE / TIME ────────
+    //Built in methods used
     static String getCurrentDate() {
         return LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    static String getCurrentDateTime() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
 
-    static String addDaysToDate(String date, int days) {
+
+    static String addDaysToDate(String date ) {
         LocalDate d = LocalDate.parse(date);
-        return d.plusDays(days).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return d.plusDays(14).format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    // ──── 4. “FIND” HELPERS ────────────────────────────────────────────────────
+    // ──── 4. “FIND” HELPERS ─────
     static int findUserIndexByUsername(String user) {
         for (int i = 0; i < userCount; i++) {
             if (usernames[i].equals(user)) {
@@ -336,7 +354,7 @@ public class Library_system {
         return -1;
     }
 
-    // ──── 5. “DISPLAY AVAILABLE BOOKS” (reused by both Admin & Student) ──────
+    // ────  5.“DISPLAY AVAILABLE BOOKS” (reused by both Admin & Student) ──────
     static void displayAllAvailableBooks() {
         System.out.println("\n--- Available Books ---");
         boolean any = false;
@@ -352,7 +370,7 @@ public class Library_system {
         }
     }
 
-    // ──── 6. ADMIN LOGIN & MENU (outline only—fill in your existing methods) ───
+    // ──── 6. ADMIN LOGIN & MENU  ───
     static void adminLogin() {
         System.out.println("----------------------Admin----------------------");
         Scanner sc = new Scanner(System.in);
@@ -403,7 +421,7 @@ public class Library_system {
         }
     }
 
-    // ──── 6.1 ADMIN: ADD BOOK ──────────────────────────────────────────────────
+    // ──── 6.1 ADMIN: ADD BOOK ─────
     static void adminAddBook() {
         if (bookCount >= MAX_BOOKS) {
             System.out.println("Cannot add more books. Storage is full.");
@@ -412,7 +430,7 @@ public class Library_system {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter new Book ID (e.g. B0010): ");
         String id = sc.nextLine();
-        // (Optional) validate duplicate ID
+        // we can add validation for  duplicate ID it can be updated
         System.out.print("Enter Title: ");
         String title = sc.nextLine();
         System.out.print("Enter Author: ");
@@ -429,10 +447,11 @@ public class Library_system {
         System.out.println("Book added successfully!");
     }
 
-    // ──── 6.2 ADMIN: REMOVE BOOK ───────────────────────────────────────────────
+    // ──── 6.2 ADMIN: REMOVE BOOK ─────
     static void adminRemoveBook() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter Book ID to remove: ");
+
         String id = sc.nextLine();
         int idx = findBookIndexByID(id);
         if (idx == -1) {
@@ -450,7 +469,7 @@ public class Library_system {
         System.out.println("Book removed successfully!");
     }
 
-    // ──── 6.3 ADMIN: SEARCH BOOK ───────────────────────────────────────────────
+    // ──── 6.3 ADMIN: SEARCH BOOK ─────
     static void adminSearchBook() {
         // (Same code as studentSearchBook)
         Scanner sc = new Scanner(System.in);
@@ -488,7 +507,7 @@ public class Library_system {
         }
     }
 
-    // ──── 6.4 ADMIN: ADD USER ─────────────────────────────────────────────────
+    // ──── 6.4 ADMIN: ADD USER ────────
     static void adminAddUser() {
         if (userCount >= MAX_USERS) {
             System.out.println("User storage is full.");
@@ -527,7 +546,7 @@ public class Library_system {
     }
 
 
-    // ──── 6.5 ADMIN: REMOVE USER ──────────────────────────────────────────────
+    // ──── 6.5 ADMIN: REMOVE USER ───────
     static void adminRemoveUser() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter Username to remove: ");
@@ -547,7 +566,7 @@ public class Library_system {
         System.out.println("User removed successfully.");
     }
 
-    // ──── 6.6 ADMIN: VIEW ALL HISTORY ─────────────────────────────────────────
+    // ──── 6.6 ADMIN: VIEW ALL HISTORY ─────
     static void displayAllHistory() {
         System.out.println("\n--- Full Transaction History ---");
         if (historyCount == 0) {
@@ -555,13 +574,13 @@ public class Library_system {
             return;
         }
         for (int i = 0; i < historyCount; i++) {
-            System.out.printf("%s | %s | %s | %s | %s | %s | %s\n",
+            System.out.printf("Issue date: %-10s  | Registration number:%-10s  | Action:%-10s  |Book id: %-10s   | Due date:  %-10s| Return Date : %-10s|Fine %-10s \n",
                     histTimestamps[i], histRegNos[i], histActions[i],
                     histBookIDs[i], histDueDates[i], histReturnDates[i], histFines[i]);
         }
     }
 
-    // ──── 6.7 ADMIN: VIEW BOOKS BY CATEGORY ───────────────────────────────────
+    // ──── 6.7 ADMIN: VIEW BOOKS BY CATEGORY ─────
     static void adminViewBooksByCategory() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter category to view (e.g. PF, DataScience, English, Civic): ");
@@ -580,12 +599,16 @@ public class Library_system {
         }
     }
 
-    // ──── 7. FILE I/O: LOAD AND SAVE ───────────────────────────────────────────
+    // ──── 7. FILE I/O: LOAD AND SAVE ────────
     static void loadUsers() {
         try (Scanner sc = new Scanner(new FileReader("users.dat"))) {
 
             while (sc.hasNextLine()) {
                 String[] parts = sc.nextLine().split("\\|");
+                if(parts.length<4){
+                    continue;
+                }
+
                 regNos[userCount]    = parts[0];
                 usernames[userCount] = parts[1];
                 passwords[userCount] = parts[2];
@@ -622,6 +645,9 @@ public class Library_system {
 
             while (sc.hasNext()) {
                 String[] parts = sc.nextLine().split("\\|");
+                if(parts.length<7){
+                    continue;
+                }
                 histTimestamps[historyCount]  = parts[0];
                 histRegNos[historyCount]      = parts[1];
                 histActions[historyCount]     = parts[2];
