@@ -1,4 +1,5 @@
-logical flow of library managmnent system.
+no logical flow of library managmnent system.
+its is not fro u guys.it is only the mesh up of ideas before creating it
 1
 admin 
 type usernmane and password
@@ -19,7 +20,7 @@ not returned books time factor late or on time
 books by catageory
 three files.data for users books ,history
 i will make a librarary managment system .
-admin sir khurram.
+
 own password 
 
 user sp25-bds-0 to 55
